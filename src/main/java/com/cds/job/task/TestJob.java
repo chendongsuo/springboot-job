@@ -7,6 +7,7 @@ import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -22,10 +23,12 @@ public class TestJob implements Job, Serializable {
     /**
      * 测试定时任务
      */
+    @Async
     public void firstJob() {
         System.out.println("测试定时任务");
     }
 
+    @Async
     public void secondJob() {
         System.out.println("第二任务::");
     }

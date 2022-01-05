@@ -11,6 +11,12 @@ import org.quartz.*;
  */
 public class ScheduleUtil {
 
+    /**
+     * 创建任务
+     * @param scheduler
+     * @param job
+     * @throws SchedulerException
+     */
     public static void createScheduleJob(Scheduler scheduler, MyJob job) throws SchedulerException {
         Long jobId = job.getId();
         String jobGroup = job.getJobGroup();
@@ -21,13 +27,43 @@ public class ScheduleUtil {
         CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(getTriggerKey(jobId, jobGroup)).withSchedule(cronScheduleBuilder).build();
         //放入参数，运行时的方法可以获取
         jobDetail.getJobDataMap().put(SchedulerConstants.TASK_PROPERTIES, JSON.toJSONString(job));
-//        jobDetail.getJobDataMap().put("jobMethodName", job.getJobMethodName());
+        //jobDetail.getJobDataMap().put("jobMethodName", job.getJobMethodName());
 
         if (scheduler.checkExists(getJobKey(jobId, jobGroup))) {
             throw new RuntimeException("存在任务!!!");
         }
         scheduler.scheduleJob(jobDetail, trigger);
+
         System.out.println("生成任务");
+    }
+
+    /**
+     * 暂停任务
+     * @param scheduler
+     * @param myJob
+     * @throws SchedulerException
+     */
+    public static void pauseScheduleJob(Scheduler scheduler, MyJob myJob) throws SchedulerException {
+        scheduler.pauseJob(getJobKey(myJob.getId(), myJob.getJobGroup()));
+    }
+
+    /**
+     * 删除任务
+     * @param scheduler
+     * @param myJob
+     * @throws SchedulerException
+     */
+    public static void deleteScheduleJob(Scheduler scheduler, MyJob myJob) throws SchedulerException {
+        scheduler.deleteJob(getJobKey(myJob.getId(), myJob.getJobGroup()));
+    }
+
+    /**
+     * 唤醒任务
+     * @param scheduler
+     * @param myJob
+     */
+    public static void resumeScheduleJob(Scheduler scheduler, MyJob myJob) throws SchedulerException {
+        scheduler.resumeJob(getJobKey(myJob.getId(), myJob.getJobGroup()));
     }
 
     public static JobKey getJobKey(Long jobId, String jobGroup) {
