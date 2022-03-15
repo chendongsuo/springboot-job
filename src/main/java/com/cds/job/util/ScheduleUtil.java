@@ -67,7 +67,7 @@ public class ScheduleUtil {
     }
 
     public static JobKey getJobKey(Long jobId, String jobGroup) {
-        return JobKey.jobKey(SchedulerConstants.TASK_CLASS_NAME + +jobId, jobGroup);
+        return JobKey.jobKey(SchedulerConstants.TASK_CLASS_NAME + jobId, jobGroup);
     }
 
     public static TriggerKey getTriggerKey(Long jobId, String jobGroup) {
